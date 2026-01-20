@@ -16,6 +16,15 @@
             --primary-red: #b11226;
             --soft-red: #f6c1c7;
             --bg-pink: #fff5f6;
+            --text-dark: #333;
+            --card-light: #ffffff;
+        }
+
+        /* DARK MODE VARIABLES */
+        body.dark {
+            --bg-pink: #121212;
+            --text-dark: #f1f1f1;
+            --card-light: #1e1e1e;
         }
 
         * {
@@ -27,8 +36,9 @@
 
         body {
             background: var(--bg-pink);
-            color: #333;
+            color: var(--text-dark);
             overflow-x: hidden;
+            transition: background 0.4s, color 0.4s;
         }
 
         header {
@@ -60,16 +70,17 @@
             border-radius: 50%;
             object-fit: cover;
             border: 6px solid var(--primary-red);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
 
         .bio {
             margin-top: 1.5rem;
             max-width: 600px;
-            background: white;
+            background: var(--card-light);
             padding: 1.5rem;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            transition: background 0.4s;
         }
 
         .bio h2 {
@@ -141,19 +152,20 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             justify-content: center;
             align-items: center;
             z-index: 10;
         }
 
         .modal-content {
-            background: white;
+            background: var(--card-light);
             padding: 2rem;
             max-width: 500px;
             border-radius: 20px;
             animation: fadeIn 0.4s ease;
             position: relative;
+            transition: background 0.4s;
         }
 
         .modal-content h3 {
@@ -173,7 +185,7 @@
             right: 20px;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #999;
+            color: #aaa;
         }
 
         @keyframes fadeIn {
@@ -204,19 +216,32 @@
             }
         }
 
-        @media (max-width: 600px) {
-            header h1 {
-                font-size: 2rem;
-            }
+        /* Controls */
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .controls button {
+            margin: 5px;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: var(--primary-red);
+            color: white;
         }
     </style>
 </head>
 
 <body>
-    <audio id="bg-music" src="LANY-ILYSB.mp3" autoplay loop></audio>
-    <div style="text-align:center; margin-top:20px;">
-        <button onclick="document.getElementById('bg-music').play()">▶ Play Music</button>
-        <button onclick="document.getElementById('bg-music').pause()">⏸ Pause Music</button>
+
+    <audio id="bg-music" src="LANY-ILYSB.mp3" loop></audio>
+
+    <div class="controls">
+        <button onclick="playMusic()">▶ Play Music</button>
+        <button onclick="pauseMusic()">⏸ Pause Music</button>
+        <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
     </div>
 
     <header>
@@ -240,7 +265,6 @@
             </p>
         </div>
 
-        <!-- Link to gallery -->
         <a href="gallery.html" class="gallery-btn">View More Photos ❤️</a>
     </section>
 
@@ -249,7 +273,6 @@
         <div class="envelope-label">Click to open my love letter 💌</div>
     </div>
 
-    <!-- Modal -->
     <div class="modal" id="letterModal">
         <div class="modal-content">
             <span class="close" onclick="closeLetter()">&times;</span>
@@ -282,7 +305,26 @@ Always yours,
             document.getElementById("letterModal").style.display = "none";
         }
 
-        // Floating hearts generator
+        function playMusic() {
+            document.getElementById("bg-music").play();
+        }
+
+        function pauseMusic() {
+            document.getElementById("bg-music").pause();
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark");
+            localStorage.setItem("darkMode",
+                document.body.classList.contains("dark"));
+        }
+
+        // Load saved mode
+        if (localStorage.getItem("darkMode") === "true") {
+            document.body.classList.add("dark");
+        }
+
+        // Floating hearts
         setInterval(() => {
             const heart = document.createElement("div");
             heart.className = "heart";
